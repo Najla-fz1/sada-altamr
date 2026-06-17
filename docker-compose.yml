@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: sada_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: sada_user
+      POSTGRES_PASSWORD: change_me
+      POSTGRES_DB: sada_altamr
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: sada_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    container_name: sada_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
