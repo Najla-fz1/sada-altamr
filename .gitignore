@@ -1,0 +1,39 @@
+# Environment files
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Audio / Video files
+*.wav
+*.mp3
+*.mp4
+*.m4a
+
+# AI model files
+*.pt
+*.pth
+*.onnx
+*.bin
