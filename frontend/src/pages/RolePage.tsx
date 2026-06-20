@@ -144,7 +144,7 @@ export default function RolePage() {
     if (!selected || loading) return;
     localStorage.setItem('role', selected);
     if (selected === 'dalal') navigate('/voice-setup');
-    else navigate('/login');
+    else navigate('/admin/login');
   };
 
 

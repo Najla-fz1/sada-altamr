@@ -8,8 +8,8 @@ import LoginPage from '@/pages/admin/LoginPage';
 
 // صفحات كسولة (تُحمَّل فقط عند الحاجة)
 const VoicePrintPage = lazy(() => import('@/pages/dalal/VoicePrintPage'));
-// const DalalDashboard     = lazy(() => import('@/pages/dalal/DashboardPage'));
-// const AdminDashboard     = lazy(() => import('@/pages/admin/DashboardPage'));
+const DalalDashboard     = lazy(() => import('@/pages/dalal/DashboardPage'));
+const AdminDashboard     = lazy(() => import('@/pages/admin/DashboardPage'));
 
 // مكوّن تحميل مؤقت
 const PageLoader = () => (
@@ -29,18 +29,18 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     </Suspense>
 )},
-// { path: '/dalal', element: (
-//     <Suspense fallback={<PageLoader />}>
-//       <ProtectedRoute allowedRole="dalal">
-//         <DalalDashboard />
-//       </ProtectedRoute>
-//     </Suspense>
-// )},
-// { path: '/admin', element: (
-//     <Suspense fallback={<PageLoader />}>
-//       <ProtectedRoute allowedRole="admin">
-//         <AdminDashboard />
-//       </ProtectedRoute>
-//     </Suspense>
-// )},
+{ path: '/dalal', element: (
+    <Suspense fallback={<PageLoader />}>
+      <ProtectedRoute allowedRole="dalal">
+        <DalalDashboard />
+      </ProtectedRoute>
+    </Suspense>
+)},
+{ path: '/admin', element: (
+    <Suspense fallback={<PageLoader />}>
+      <ProtectedRoute allowedRole="admin">
+        <AdminDashboard />
+      </ProtectedRoute>
+    </Suspense>
+)},
 ]);

@@ -1,29 +1,55 @@
-import { useState }    from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, ArrowLeft } from 'lucide-react';import { useTheme }    from '@/context/ThemeContext';
+import { Lock, Mail, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { useTheme } from '@/context/ThemeContext';
 import { THEMES, BRAND } from '@/lib/theme';
-import { PageShell }   from '@/components/layout/PageShell';
-// import { ThemeToggle } from '@/components/ThemeToggle';
-import { Button }      from '@/components/ui/Button';
-import { Input }       from '@/components/ui/Input';
+import { PageShell } from '@/components/layout/PageShell';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+
+// بيانات الأدمن الثابتة مؤقتاً (استبدلها بـ API لاحقاً)
+const ADMIN_EMAIL    = 'admin@sada.sa';
+const ADMIN_PASSWORD = 'Admin@1234';
 
 export default function LoginPage() {
-  const navigate       = useNavigate();
-  const { theme, isDark } = useTheme();
-  const T              = THEMES[theme];
+  const navigate           = useNavigate();
+  const { theme, isDark }  = useTheme();
+  const T                  = THEMES[theme];
   const [email,    setEmail]    = useState('');
   const [password, setPassword] = useState('');
   const [loading,  setLoading]  = useState(false);
-  const [error,    setError]    = useState('');
+  const [errors,   setErrors]   = useState<{ email?: string; password?: string }>({});
 
-const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+  // التحقق من صحة الإيميل
+  const isValidEmail = (val: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+
+  const validate = () => {
+    const e: typeof errors = {};
+    if (!email)               e.email    = 'البريد الإلكتروني مطلوب';
+    else if (!isValidEmail(email)) e.email = 'صيغة البريد غير صحيحة';
+    if (!password)            e.password = 'كلمة المرور مطلوبة';
+    else if (password.length < 6) e.password = 'كلمة المرور قصيرة جداً';
+    return e;
+  };
+
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!email || !password) { setError('الرجاء ملء جميع الحقول'); return; }
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+
     setLoading(true);
-    setError('');
+    setErrors({});
+
     setTimeout(() => {
       setLoading(false);
-      navigate('/admin');
+      // تحقق من البيانات
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        localStorage.setItem('role', 'admin');
+        navigate('/admin');
+      } else {
+        setErrors({ password: 'البريد أو كلمة المرور غير صحيحة' });
+      }
     }, 1000);
   };
 
@@ -36,11 +62,6 @@ const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
           ${isDark ? 'rgba(201,165,70,0.06)' : 'rgba(201,165,70,0.10)'} 0%,
           transparent 100%)`,
       }} />
-
-      {/* Theme Toggle
-      <div style={{ position: 'fixed', top: 16, left: 16, zIndex: 50 }}>
-        <ThemeToggle />
-      </div> */}
 
       {/* زر الرجوع */}
       <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 50 }}>
@@ -111,10 +132,17 @@ const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
                 label="البريد الإلكتروني"
                 type="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={e => {
+                  setEmail(e.target.value);
+                  // مسح الخطأ فور الكتابة
+                  if (errors.email) setErrors(p => ({ ...p, email: undefined }));
+                }}
                 placeholder="example@email.com"
                 dir="ltr"
                 icon={<Mail size={15} />}
+                error={errors.email}
+                // يمنع اللصق لو أردت — اختياري
+                // onPaste={e => e.preventDefault()}
               />
 
               {/* كلمة المرور */}
@@ -122,12 +150,13 @@ const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
                 label="كلمة المرور"
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
-                // placeholder="••••••••"
-                error={error}
-                  dir="ltr"
-                // style={{ textAlign: 'right' }}
+                onChange={e => {
+                  setPassword(e.target.value);
+                  if (errors.password) setErrors(p => ({ ...p, password: undefined }));
+                }}
+                dir="ltr"
                 icon={<Lock size={15} />}
+                error={errors.password}
               />
 
               {/* زر الدخول */}
@@ -144,13 +173,16 @@ const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
             </div>
           </form>
 
-          {/* ملاحظة */}
-          <p style={{
-            textAlign: 'center', fontSize: 12,
-            color: T.textFaint, marginTop: 16,
+          {/* ملاحظة أمان */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            gap: 6, marginTop: 16,
           }}>
-            هذه الصفحة مخصصة لمسؤولي النظام فقط
-          </p>
+            <ShieldCheck size={13} color={T.textFaint} />
+            <p style={{ fontSize: 12, color: T.textFaint, margin: 0 }}>
+              هذه الصفحة مخصصة لمسؤولي النظام فقط
+            </p>
+          </div>
         </div>
       </div>
     </PageShell>
