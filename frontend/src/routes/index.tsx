@@ -7,7 +7,7 @@ import RolePage from '@/pages/RolePage';
 import LoginPage from '@/pages/admin/LoginPage';
 
 // صفحات كسولة (تُحمَّل فقط عند الحاجة)
-// const VoiceBiometricPage = lazy(() => import('@/pages/dalal/VoiceBiometricPage'));
+const VoicePrintPage = lazy(() => import('@/pages/dalal/VoicePrintPage'));
 // const DalalDashboard     = lazy(() => import('@/pages/dalal/DashboardPage'));
 // const AdminDashboard     = lazy(() => import('@/pages/admin/DashboardPage'));
 
@@ -22,13 +22,13 @@ export const router = createBrowserRouter([
   { path: '/',       element: <RolePage /> },
 { path: '/admin/login', element: <LoginPage /> },
   
-//     { path: '/voice-setup', element: (
-//     <Suspense fallback={<PageLoader />}>
-//       <ProtectedRoute allowedRole="dalal">
-//         <VoiceBiometricPage />
-//       </ProtectedRoute>
-//     </Suspense>
-// )},
+    { path: '/voice-setup', element: (
+    <Suspense fallback={<PageLoader />}>
+      <ProtectedRoute allowedRole="dalal">
+        <VoicePrintPage  />
+      </ProtectedRoute>
+    </Suspense>
+)},
 // { path: '/dalal', element: (
 //     <Suspense fallback={<PageLoader />}>
 //       <ProtectedRoute allowedRole="dalal">
