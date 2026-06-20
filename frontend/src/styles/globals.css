@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --font-ar: 'Tajawal', 'Cairo', system-ui, sans-serif;
+  --transition-theme: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base:  220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast:  140ms cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-sm:   0.375rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   0.75rem;
+  --radius-xl:   1rem;
+  --radius-2xl:  1.25rem;
+  --radius-full: 9999px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-ar);
+  min-height: 100dvh;
+  transition: background var(--transition-theme), color var(--transition-theme);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
